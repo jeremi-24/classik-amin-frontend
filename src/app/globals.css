@@ -50,36 +50,37 @@
   --shadow-drop: 0px 0px 4px 0px rgba(0, 0, 0, 0.15);
 
   /* Border radius */
-  --rounded-0: 0rem;
-  --rounded-1: 0.03125rem;
-  --rounded-2: 0.0625rem;
-  --rounded-3: 0.125rem;
-  --rounded-4: 0.1439rem;
-  --rounded-5: 0.1875rem;
-  --rounded-6: 0.25rem;
-  --rounded-7: 0.2982rem;
-  --rounded-8: 0.3125rem;
-  --rounded-9: 0.323rem;
-  --rounded-10: 0.375rem;
-  --rounded-11: 0.4rem;
-  --rounded-12: 0.4507rem;
-  --rounded-13: 0.5rem;
-  --rounded-14: 0.625rem;
-  --rounded-15: 0.75rem;
-  --rounded-16: 0.8125rem;
-  --rounded-17: 0.9375rem;
-  --rounded-18: 1rem;
-  --rounded-19: 1.125rem;
-  --rounded-20: 1.21875rem;
-  --rounded-21: 1.25rem;
-  --rounded-22: 1.3125rem;
-  --rounded-23: 1.5rem;
-  --rounded-24: 1.5625rem;
-  --rounded-25: 1.75rem;
-  --rounded-26: 1.875rem;
-  --rounded-27: 2rem;
-  --rounded-28: 5.375rem;
-  --rounded-29: 62.4375rem;
+  --rounded-0: 0px;
+--rounded-1: 4px;
+--rounded-2: 8px;
+--rounded-3: 12px;
+--rounded-4: 16px;
+--rounded-5: 20px;
+--rounded-6: 24px;
+--rounded-7: 28px;
+--rounded-8: 32px;
+--rounded-9: 36px;
+--rounded-10: 40px;
+--rounded-11: 44px;
+--rounded-12: 48px;
+--rounded-13: 52px;
+--rounded-14: 56px;
+--rounded-15: 60px;
+--rounded-16: 64px;
+--rounded-17: 68px;
+--rounded-18: 72px;
+--rounded-19: 76px;
+--rounded-20: 80px;
+--rounded-21: 84px;
+--rounded-22: 88px;
+--rounded-23: 92px;
+--rounded-24: 96px;
+--rounded-25: 100px;
+--rounded-26: 104px;
+--rounded-27: 108px;
+--rounded-28: 112px;
+--rounded-29: 116px;
+
 }
 
 /* Dark mode support */

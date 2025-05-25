@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -10,66 +10,86 @@ import {
   UserPlus, ArrowUp01, NotepadText,
   Users
 } from 'lucide-react';
-import { useState, useEffect, Dispatch, SetStateAction } from 'react'; // Importez Dispatch et SetStateAction
+import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLevel } from '@/hooks/LevelContext';
 
-// Définissez l'interface pour les props du composant Sidebar
+
 interface SidebarProps {
   isSidebarOpen: boolean;
-  setIsSidebarOpen: Dispatch<SetStateAction<boolean>>; // Type correct pour un setter d'état
+  setIsSidebarOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const sidebarLinks = [
-  { name: 'Tableau de bord', href: '/dashboard', icon: Home, tooltip: 'Accéder au tableau de bord principal' },
-  {
-    name: 'Gestion des élèves',
-    href: '/primary/students',
-    icon: Users,
-    tooltip: 'Gérer les informations des élèves',
-    subLinks: [
-      { name: 'Ajouter des élèves', href: '/primary/addstudents', icon: UserPlus, tooltip: 'Inscrire de nouveaux élèves' },
-      { name: 'Liste des élèves', href: '/primary/students', icon: Paperclip, tooltip: 'Voir la liste complète des élèves' },
-    ],
-  },
-  {
-    name: 'Notes & Bulletins',
-    href: '/primary/grades',
-    icon: FileDigit,
-    tooltip: 'Gérer les notes et les bulletins scolaires',
-    subLinks: [
-      { name: 'Saisi de notes', href: '/primary/addgrades', icon: ArrowUp01, tooltip: 'Saisir les notes des élèves' },
-      { name: 'Bulletins', href: '/primary/bulletins', icon: NotepadText, tooltip: 'Générer et consulter les bulletins' },
-    ],
-  },
-  {
-    name: 'Paiements',
-    href: '#',
-    icon: DollarSign,
-    tooltip: 'Gérer les paiements et transactions',
-    subLinks: [
-      { name: 'Paiements reçus', href: '/primary/payments', icon: Wallet, tooltip: 'Voir l\'historique des paiements reçus' },
-      { name: 'Nouveau paiement', href: '/primary/payments/new', icon: PlusCircle, tooltip: 'Enregistrer un nouveau paiement' },
-    ],
-  },
-
-  { name: 'Paramètres', href: '/settings', icon: Settings, tooltip: 'Configurer les paramètres de l\'application' },
-];
-
-// Mettez à jour la signature du composant Sidebar pour accepter les props
 export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) {
   const pathname = usePathname();
   const [openSubMenus, setOpenSubMenus] = useState<{ [key: string]: boolean }>({});
+  const { selectedLevel } = useLevel(); 
+
+  const generateLevelLink = (baseHref: string) => {
+    if (!selectedLevel) {
+      // Si aucun niveau n'est sélectionné, retourne le lien tel quel (ou redirige l'utilisateur)
+      return baseHref; 
+    }
+    // Remplace '/primary' par le niveau sélectionné dans le chemin
+    return baseHref.replace('/primary', `/${selectedLevel}`);
+  };
+
+  const adaptedSidebarLinks = [
+    { name: 'Tableau de bord', href: '/dashboard', icon: Home, tooltip: 'Accéder au tableau de bord principal' },
+    {
+      name: 'Gestion des élèves',
+      href: '/primary/students',
+      icon: Users,
+      tooltip: 'Gérer les informations des élèves',
+      subLinks: [
+        { name: 'Ajouter des élèves', href: '/primary/addstudents', icon: UserPlus, tooltip: 'Inscrire de nouveaux élèves' },
+        { name: 'Liste des élèves', href: '/primary/students', icon: Paperclip, tooltip: 'Voir la liste complète des élèves' },
+      ],
+    },
+    {
+      name: 'Notes & Bulletins',
+      href: '/primary/notes',
+      icon: FileDigit,
+      tooltip: 'Gérer les notes et les bulletins scolaires',
+      subLinks: [
+        { name: 'Saisi de notes', href: '/primary/notes', icon: ArrowUp01, tooltip: 'Saisir les notes des élèves' },
+        { name: 'Bulletins', href: '/primary/bulletins', icon: NotepadText, tooltip: 'Générer et consulter les bulletins' },
+      ],
+    },
+    {
+      name: 'Paiements',
+      href: '#',
+      icon: DollarSign,
+      tooltip: 'Gérer les paiements et transactions',
+      subLinks: [
+        { name: 'Paiements reçus', href: '/primary/payments', icon: Wallet, tooltip: 'Voir l\'historique des paiements reçus' },
+        { name: 'Nouveau paiement', href: '/primary/payments/', icon: PlusCircle, tooltip: 'Enregistrer un nouveau paiement' },
+      ],
+    },
+    { name: 'Paramètres', href: '/settings', icon: Settings, tooltip: 'Configurer les paramètres de l\'application' },
+  ].map(link => {
+    // Applique generateLevelLink aux liens principaux
+    const newLink = { ...link, href: generateLevelLink(link.href) };
+    if (link.subLinks) {
+      // Applique generateLevelLink aux sous-liens
+      newLink.subLinks = link.subLinks.map(subLink => ({
+        ...subLink,
+        href: generateLevelLink(subLink.href),
+      }));
+    }
+    return newLink;
+  });
 
   useEffect(() => {
     const initialOpenState: { [key: string]: boolean } = {};
-    sidebarLinks.forEach(link => {
+    adaptedSidebarLinks.forEach(link => { 
       if (link.subLinks) {
         const isSubActive = link.subLinks.some(sub => pathname.startsWith(sub.href));
         initialOpenState[link.name] = isSubActive;
       }
     });
     setOpenSubMenus(initialOpenState);
-  }, [pathname]);
+  }, [pathname, selectedLevel]); 
 
   const toggleSubMenu = (name: string) => {
     setOpenSubMenus(prev => ({
@@ -92,7 +112,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
 
       <nav className="flex-1 overflow-y-auto p-4 ">
         <ul className="space-y-2">
-          {sidebarLinks.map((link) => {
+          {adaptedSidebarLinks.map((link) => {
             const isActive = pathname.startsWith(link.href);
             const isSubActive = link.subLinks?.some(sub => pathname.startsWith(sub.href));
             return (
