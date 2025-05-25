@@ -3,15 +3,21 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { 
-  Home, DollarSign, Settings, 
-  ChevronDown, ChevronUp, FileDigit, 
-  PlusCircle, Wallet, Paperclip, 
-  UserPlus, ArrowUp01, NotepadText, 
+import {
+  Home, DollarSign, Settings,
+  ChevronDown, ChevronUp, FileDigit,
+  PlusCircle, Wallet, Paperclip,
+  UserPlus, ArrowUp01, NotepadText,
   Users
 } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Dispatch, SetStateAction } from 'react'; // Importez Dispatch et SetStateAction
 import { motion, AnimatePresence } from 'framer-motion';
+
+// Définissez l'interface pour les props du composant Sidebar
+interface SidebarProps {
+  isSidebarOpen: boolean;
+  setIsSidebarOpen: Dispatch<SetStateAction<boolean>>; // Type correct pour un setter d'état
+}
 
 const sidebarLinks = [
   { name: 'Tableau de bord', href: '/dashboard', icon: Home, tooltip: 'Accéder au tableau de bord principal' },
@@ -45,23 +51,25 @@ const sidebarLinks = [
       { name: 'Nouveau paiement', href: '/primary/payments/new', icon: PlusCircle, tooltip: 'Enregistrer un nouveau paiement' },
     ],
   },
-  
+
   { name: 'Paramètres', href: '/settings', icon: Settings, tooltip: 'Configurer les paramètres de l\'application' },
 ];
 
-export default function Sidebar() {
+// Mettez à jour la signature du composant Sidebar pour accepter les props
+export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProps) {
   const pathname = usePathname();
   const [openSubMenus, setOpenSubMenus] = useState<{ [key: string]: boolean }>({});
 
-    useEffect(() => {
+  useEffect(() => {
     const initialOpenState: { [key: string]: boolean } = {};
     sidebarLinks.forEach(link => {
       if (link.subLinks) {
-        initialOpenState[link.name] = true;
+        const isSubActive = link.subLinks.some(sub => pathname.startsWith(sub.href));
+        initialOpenState[link.name] = isSubActive;
       }
     });
     setOpenSubMenus(initialOpenState);
-  }, []);
+  }, [pathname]);
 
   const toggleSubMenu = (name: string) => {
     setOpenSubMenus(prev => ({
@@ -77,7 +85,7 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="w-64 bg-white shadow-md flex flex-col border-r ">
+    <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-md flex flex-col border-r transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0 transition-transform duration-300 ease-in-out`}>
       <div className="flex items-center justify-center p-[15.5px] border-b">
         <Image src="/logo/logo.png" alt="Classiq Logo" width={120} height={30} />
       </div>
@@ -92,10 +100,10 @@ export default function Sidebar() {
                 {link.subLinks ? (
                   <div>
                     <button
-                        onClick={() => toggleSubMenu(link.name)}
+                      onClick={() => toggleSubMenu(link.name)}
                       className={`flex items-center w-full px-3 py-2 rounded-lg text-left transition-colors ${
-                        isSubActive 
-                          ? 'bg-primary-1 text-primary font-medium' 
+                        isSubActive
+                          ? 'bg-primary-1 text-primary font-medium'
                           : 'text-type-light hover:bg-gray-100'
                       }`}
                       title={link.tooltip}
@@ -122,7 +130,7 @@ export default function Sidebar() {
                             const subIsActive = pathname.startsWith(subLink.href);
                             return (
                               <li key={subLink.name}>
-                                <Link href={subLink.href} passHref>
+                                <Link href={subLink.href} passHref onClick={() => setIsSidebarOpen(false)}>
                                   <span
                                     className={`flex items-center px-3 py-2 rounded-md text-sm cursor-pointer transition-colors ${
                                       subIsActive
@@ -143,11 +151,11 @@ export default function Sidebar() {
                     </AnimatePresence>
                   </div>
                 ) : (
-                  <Link href={link.href} passHref>
+                  <Link href={link.href} passHref onClick={() => setIsSidebarOpen(false)}>
                     <span
                       className={`flex items-center px-3 py-2 rounded-lg cursor-pointer transition-colors ${
                         isActive
-                          ? 'bg-blue-500 text-white font-medium'
+                          ? 'bg-primary-1 text-primary font-medium'
                           : 'text-type-dark hover:bg-gray-100'
                       }`}
                       title={link.tooltip}
@@ -164,9 +172,9 @@ export default function Sidebar() {
       </nav>
 
       <div className="p-4 border-t">
-        <div className='bg-orange-300 p-4 rounded-lg ' >
+        <div className='bg-primary-1 p-4 rounded-lg' >
           <p className="font-semibold text-type-dark">EPL REDAMPTEUR</p>
-          <p className="text-sm text-gray-500">secretariat@redampteur.com</p>
+          <p className="text-sm text-type-light">secretariat@redampteur.com</p>
         </div>
       </div>
     </aside>
