@@ -61,7 +61,7 @@ export const SearchBar = ({
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         className={cn(
-          "w-full py-2 pr-4 pl-10 rounded-md border transition-all outline-none",
+          "w-full py-2 pr-4 pl-10 rounded-md border-border border transition-all outline-none",
           focused && "focus:ring-2 focus:ring-[var(--primary)] border-[var(--primary)]",
           !focused && "focus:border-[var(--primary)]",
           disabled
