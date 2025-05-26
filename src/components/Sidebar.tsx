@@ -24,6 +24,7 @@ export default function Sidebar({ isSidebarOpen, setIsSidebarOpen }: SidebarProp
 
   const sidebarLinks = [
     { name: 'Tableau de bord', href: '/dashboard', icon: Home, tooltip: 'Accéder au tableau de bord principal' },
+    { name: 'Master', href: '/master', icon: Home, tooltip: 'Accéder au tableau de bord principal' },
     {
       name: 'Gestion des élèves',
       href: '/students',

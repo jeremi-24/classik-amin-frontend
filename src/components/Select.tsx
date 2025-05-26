@@ -76,7 +76,7 @@ export const Select = ({
     }
   };
 
-  // Scroll into view on highlight change
+  
   useEffect(() => {
     if (listRef.current && highlightedIndex >= 0) {
       const el = listRef.current.children[highlightedIndex] as HTMLElement;
@@ -100,7 +100,7 @@ export const Select = ({
         ref={buttonRef}
         aria-controls="select-listbox"
         className={cn(
-          "w-full px-4 py-2 text-left border rounded-md bg-white text-[var(--type-dark)] flex items-center justify-between transition-all focus:outline-none focus:ring-2 focus:ring-[var(--primary)]",
+          "w-full px-4 py-2 text-left border-border border rounded-md bg-white text-[var(--type-dark)] flex items-center justify-between transition-all focus:outline-none focus:ring-2 focus:ring-[var(--primary)]",
           disabled
             ? "cursor-not-allowed opacity-50 bg-[var(--background-2)]"
             : "hover:border-[var(--primary)]",
