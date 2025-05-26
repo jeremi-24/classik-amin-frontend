@@ -1,12 +1,9 @@
 "use client";
 
-import { useLevel } from "@/hooks/LevelContext";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-
 
 const levels = [
   {
@@ -31,7 +28,6 @@ const levels = [
 
 export default function NiveauPage() {
   const pathname = usePathname();
-  const { setSelectedLevel } = useLevel(); 
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] py-12 px-4 md:px-6 bg-[var(--color-background)]">
@@ -43,7 +39,6 @@ export default function NiveauPage() {
           <Link 
             href={`/${level.id}/dashboard`} 
             key={level.name}
-            onClick={() => setSelectedLevel(level.id as 'primary' | 'college' | 'lycee')}
           >
             <div
               className={cn(
